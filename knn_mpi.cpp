@@ -42,6 +42,13 @@ double distancia_euclidiana(std::vector<double> dest, classe src, int n) {
     return dist;
 }
 
+double distancia_manhattan(std::vector<double> dest, classe src, int n) {
+    double dist = 0.0;
+    for (int i = 0; i < n; i++)
+        dist += std::abs(dest.at(i) - src.v.at(i));
+    return dist;
+}
+
 int main(int argc, char const **argv) {
     FILE *treino, *teste;
     char n_treino[2000], n_teste[2000];

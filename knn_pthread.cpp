@@ -47,6 +47,13 @@ double distancia_euclidiana(classe dest, classe src, int n) {
     return dist;
 }
 
+double distancia_manhattan(classe dest, classe src, int n) {
+    double dist = 0.0;
+    for (int i = 0; i < n; i++)
+        dist += std::abs(dest.v.at(i) - src.v.at(i));
+    return dist;
+}
+
 void knn(int tam) {
     double dist;
     for (auto & i : m_teste) {
