@@ -52,7 +52,7 @@ double distancia_manhattan(std::vector<double> dest, classe src, int n) {
 int main(int argc, char const **argv) {
     FILE *treino, *teste;
     char n_treino[2000], n_teste[2000];
-    const char *tam = argv[2];
+    const char *tam = argv[1];
     int atributos = atoi(argv[1]);
     double atr;
     classe atr_classes;
@@ -177,9 +177,9 @@ int main(int argc, char const **argv) {
     ENDTIME(); // FINALIZANDO CONTAGEM DE TEMPO
 
     // CALCULANDO TEMPO DE EXECUCAO
-    printf("PROCESSOR NAME: %s\n", processor_name);
+//    printf("PROCESSOR NAME: %s\n", processor_name);
     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
-    std::cout << elapsed << '\n';
+    std::cout << "PROCESSOR NAME: " << processor_name << " - " << elapsed << '\n';
 
     return 0;
 }
