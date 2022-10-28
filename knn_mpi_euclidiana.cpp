@@ -177,9 +177,9 @@ int main(int argc, char const **argv) {
     ENDTIME(); // FINALIZANDO CONTAGEM DE TEMPO
 
     // CALCULANDO TEMPO DE EXECUCAO
-//    printf("PROCESSOR NAME: %s\n", processor_name);
+    elapsed = (finish.tv_sec - start.tv_sec);
     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
-    std::cout << "PROCESSOR NAME: " << processor_name << " - " << elapsed << '\n';
+    std::cout << "MPI EUCLIDIANA - PROCESSOR NAME: " << processor_name << " - " << elapsed << '\n';
 
     return 0;
 }

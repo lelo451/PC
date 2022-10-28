@@ -69,6 +69,21 @@ void knn(int tam) {
     }
 }
 
+void knn_manhattan(int tam) {
+    double dist;
+    for (auto & i : m_teste) {
+        predicao.dist = DBL_MAX;
+        for (auto & j : m_treino) {
+            dist = distancia_manhattan(i, j, tam);
+            if (dist < predicao.dist) {
+                predicao.dist = dist;
+                predicao.genero = j.genero;
+            }
+        }
+        predicoes.push_back(predicao);
+    }
+}
+
 void *knn_pthread(void *args) {
     int start, finish, id, tam;
     char *classe_thread;
@@ -86,6 +101,41 @@ void *knn_pthread(void *args) {
         predicao.dist = DBL_MAX;
         for (int j = start; j < finish; j++) {
             dist = distancia_euclidiana(i, m_treino.at(j), tam);
+            if (dist < min_dist) {
+                min_dist = dist;
+                classe_thread = m_treino.at(j).genero;
+            }
+        }
+        pthread_mutex_lock(&lock);
+        if (min_dist < predicao.dist) {
+            predicao.dist = min_dist;
+            predicao.genero = classe_thread;
+        }
+        pthread_mutex_unlock(&lock);
+        if (id == 0) {
+            predicoes.push_back(predicao);
+        }
+        pthread_barrier_wait(&barrier);
+    }
+}
+
+void *knn_pthread_manhattan(void *args) {
+    int start, finish, id, tam;
+    char *classe_thread;
+    double dist, min_dist;
+
+    t_args *a;
+    a = (t_args *) args;
+    id = (int) a->id_thread;
+    start = (int) a->start;
+    finish = (int) a->finish;
+    tam = (int) a->tam;
+
+    for (auto & i : m_teste) {
+        min_dist = DBL_MAX;
+        predicao.dist = DBL_MAX;
+        for (int j = start; j < finish; j++) {
+            dist = distancia_manhattan(i, m_treino.at(j), tam);
             if (dist < min_dist) {
                 min_dist = dist;
                 classe_thread = m_treino.at(j).genero;
@@ -162,6 +212,19 @@ int main(int argc, char const *argv[]) {
             STARTTIME();
             knn(atributos);
             ENDTIME();
+
+            elapsed = (finish.tv_sec - start.tv_sec);
+            elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+            std::cout << "sequencial euclidiana: " << elapsed << '\n';
+            break;
+        case 1:
+            STARTTIME();
+            knn_manhattan(atributos);
+            ENDTIME();
+
+            elapsed = (finish.tv_sec - start.tv_sec);
+            elapsed += (finish.tv_nsec - start.tv_nsec)  / 1000000000.0;
+            std::cout << "sequencial manhattan: " << elapsed << '\n';
             break;
         default:
             pthread_t t[threads];
@@ -189,10 +252,41 @@ int main(int argc, char const *argv[]) {
             ENDTIME();
             pthread_barrier_destroy(&barrier);
             pthread_mutex_destroy(&lock);
-    }
 
-    elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
-    std::cout << elapsed << '\n';
+            elapsed = (finish.tv_sec - start.tv_sec);
+            elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+            std::cout << "Thread euclidiana: " << elapsed << '\n';
+
+            t[threads];
+            pthread_barrier_init(&barrier, NULL, threads);
+            pthread_mutex_init(&lock, NULL);
+            args[threads];
+            salto = floor(m_treino.size()/threads);
+            i, line = 0;
+            STARTTIME();
+            for (i = 0; i < threads - 1; i++) {
+                args[i].id_thread = i;
+                args[i].start = line;
+                args[i].finish = line + salto;
+                args[i].tam = atributos;
+                pthread_create(&t[i], NULL, knn_pthread_manhattan, (void *) &args[i]);
+                line = args[i].finish;
+            }
+            args[i].id_thread = i;
+            args[i].start = line;
+            args[i].finish = m_treino.size();
+            args[i].tam = atributos;
+            pthread_create(&t[i], NULL, knn_pthread_manhattan, (void *) &args[i]);
+            for (i = 0; i < threads; i++)
+                pthread_join(t[i], NULL);
+            ENDTIME();
+            pthread_barrier_destroy(&barrier);
+            pthread_mutex_destroy(&lock);
+
+            elapsed = (finish.tv_sec - start.tv_sec);
+            elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+            std::cout << "thread manhattan: " << elapsed << '\n';
+    }
 
     return 0;
 }
