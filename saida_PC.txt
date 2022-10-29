@@ -1200,7 +1200,6 @@ thread manhattan: 13,8023
 
 
 MPI EUCLIDIANA
-
 Tamanho da matriz 59 - 2 thread(s)
 11,8081
 11,8086
