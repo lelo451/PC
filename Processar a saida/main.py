@@ -1,7 +1,7 @@
 import numpy as np
 import csv
 
-header = ['algoritmo', 'nº atributos', 'threads/processos', 'tempo']
+header = ['algoritmo', 'n atributos', 'threads/processos', 'tempo']
 
 #   59      154     161     256
 #   [0,0]   [0,1]   [0,2]   [0,3]   euclidiano
