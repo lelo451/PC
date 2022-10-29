@@ -14,19 +14,20 @@ do
   for ((j = 0; j < 2; j++)); do
     for ((k = 0; k < 15; k++)); do
       ./pthread $j $i 1
+      printf "\n"
     done
     printf "\n\n"
   done
   printf "\n\n"
-  for j in "${thread[@]}"
-    do
-      printf "$j thread(s)\n"
-      for ((k = 0; k < 15; k++)); do
-        ./pthread 2 $i $j
-      done
-      printf "\n\n"
+  for j in "${thread[@]}" do
+    printf "$j thread(s)\n"
+    for ((k = 0; k < 15; k++)); do
+      ./pthread 2 $i $j
+      printf "\n"
     done
-  printf "-------------------------- \n\n"
+    printf "\n\n"
+  done
+  printf "\n\n"
 done
 
 
@@ -34,11 +35,12 @@ for i in "${mpi_size[@]}"
 do
   for j in "${thread[@]}"
   do
-    printf "Tamanho da matriz $i - $j thread(s)\n"
+    printf "Tamanho da matriz $i - $j processo(s)\n"
     for ((k = 0; k < 15; k++)); do
       mpirun -np $j ./mpi_euclidiana $i
+      printf "\n"
     done
-    printf "-------------------------- \n\n"
+    printf "\n\n"
   done
 done
 
@@ -46,10 +48,11 @@ for i in "${mpi_size[@]}"
 do
   for j in "${thread[@]}"
   do
-    printf "Tamanho da matriz $i - $j processos(s)\n"
+    printf "Tamanho da matriz $i - $j processo(s)\n"
     for ((k = 0; k < 15; k++)); do
       mpirun -np $j ./mpi_manhattan $i
+      printf "\n"
     done
-    printf "-------------------------- \n\n"
+    printf "\n\n"
   done
 done
