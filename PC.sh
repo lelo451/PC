@@ -20,7 +20,7 @@ do
   printf "\n\n"
   for j in "${thread[@]}"
     do
-      printf "Tamanho da matriz $i - $j thread(s)\n"
+      printf "$j thread(s)\n"
       for ((k = 0; k < 15; k++)); do
         ./pthread 2 $i $j
       done
