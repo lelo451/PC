@@ -1,0 +1,33 @@
+matriz: 161
+sequencial euclidiana: 66.1846
+sequencial euclidiana: 61.9455
+sequencial euclidiana: 57.4196
+sequencial euclidiana: 57.4151
+sequencial euclidiana: 57.4515
+sequencial euclidiana: 57.6946
+sequencial euclidiana: 57.3917
+sequencial euclidiana: 57.3507
+sequencial euclidiana: 57.3411
+sequencial euclidiana: 57.4467
+sequencial euclidiana: 57.4087
+sequencial euclidiana: 57.3392
+sequencial euclidiana: 57.4558
+sequencial euclidiana: 57.3706
+sequencial euclidiana: 58.6922
+
+
+sequencial manhattan: 51.6548
+sequencial manhattan: 51.7451
+sequencial manhattan: 51.6856
+sequencial manhattan: 51.6408
+sequencial manhattan: 51.708
+sequencial manhattan: 51.6846
+sequencial manhattan: 51.7397
+sequencial manhattan: 51.652
+sequencial manhattan: 51.6597
+sequencial manhattan: 51.6328
+sequencial manhattan: 51.6568
+sequencial manhattan: 51.6635
+sequencial manhattan: 51.6221
+sequencial manhattan: 51.6072
+sequencial manhattan: 51.8288
