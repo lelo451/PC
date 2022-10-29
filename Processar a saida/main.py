@@ -1,9 +1,7 @@
 import numpy as np
 import csv
 
-header_seq = ['59', '154', '161', '256']
-header_pthread = ['59', '154', '256']
-header_mpi = ['59', '161', '256']
+header = ['algoritmo', 'nº atributos', 'threads/processos', 'tempo']
 
 #   59      154     161     256
 #   [0,0]   [0,1]   [0,2]   [0,3]   euclidiano
@@ -25,7 +23,6 @@ sequencial = np.zeros((2, 4), dtype=float)
 pthread_euclidiano = np.zeros((11, 3), dtype=float)
 pthread_manhattan = np.zeros((11, 3), dtype=float)
 
-
 #   59      161     256
 #   [00,0]  [00,1]  [00,2]  2
 #   [01,0]  [01,1]  [01,2]  3
@@ -41,12 +38,46 @@ pthread_manhattan = np.zeros((11, 3), dtype=float)
 mpi_euclidiano = np.zeros((11, 3), dtype=float)
 mpi_manhattan = np.zeros((11, 3), dtype=float)
 
+geral = np.zeros((140, 4), dtype='S40')
+
+
+def get_numero_atributos(seq: int):
+    match seq:
+        case 0:
+            return "59"
+        case 1:
+            return "154"
+        case 2:
+            return "161"
+        case 3:
+            return "256"
+
+
+def get_numero_atributos_pthread(seq: int):
+    match seq:
+        case 0:
+            return "59"
+        case 1:
+            return "154"
+        case 2:
+            return "256"
+
+
+def get_numero_atributos_mpi(seq: int):
+    match seq:
+        case 0:
+            return "59"
+        case 1:
+            return "161"
+        case 2:
+            return "256"
+
 
 def convert(numero):
     return numero.replace(',', '.')
 
 
-def soma_na_matrix(i:int, linha:str, atr59, atr154, atr256: bool):
+def soma_na_matrix(i: int, linha: str, atr59, atr154, atr256: bool):
     j = -1
     if atr59:
         j = 0
@@ -60,7 +91,8 @@ def soma_na_matrix(i:int, linha:str, atr59, atr154, atr256: bool):
         case 'thread manhattan':
             pthread_manhattan[i, j] += float(convert(linha.strip().split(': ')[1]))
 
-def soma_mpi(i:int, linha:str,  atr59, atr161, atr256, euclidiana, manhattan: bool):
+
+def soma_mpi(i: int, linha: str, atr59, atr161, atr256, euclidiana, manhattan: bool):
     j = -1
     if atr59:
         j = 0
@@ -608,27 +640,126 @@ def proccess_file():
 
 if __name__ == '__main__':
     proccess_file()
-    with open('sequencial.csv', 'w', encoding='UTF8', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(header_seq)
-        writer.writerows(sequencial)
+    row = 0
+    atributos = 0
+    for i in sequencial.transpose():
+        count = 0
+        for j in i:
+            if count == 0:
+                geral[row, 0] = "knn_euclidiano"
+                geral[row, 1] = get_numero_atributos(atributos)
+                geral[row, 2] = "1"
+                geral[row, 3] = str(j)
+            else:
+                geral[row, 0] = "knn_manhattan"
+                geral[row, 1] = get_numero_atributos(atributos)
+                geral[row, 2] = "1"
+                geral[row, 3] = str(j)
+            count += 1
+            row += 1
+        atributos += 1
 
-    with open('pthread_euclidiano.csv', 'w', encoding='UTF8', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(header_pthread)
-        writer.writerows(pthread_euclidiano)
+    thread = 2
+    for i in pthread_euclidiano:
+        count = 0
+        atributos = 0
+        for j in i:
+            if count == 0:
+                geral[row, 0] = "knn_pthread_euclidiano"
+                geral[row, 1] = get_numero_atributos_pthread(atributos)
+                geral[row, 2] = str(thread)
+                geral[row, 3] = str(j)
+            elif count == 1:
+                geral[row, 0] = "knn_pthread_euclidiano"
+                geral[row, 1] = get_numero_atributos_pthread(atributos)
+                geral[row, 2] = str(thread)
+                geral[row, 3] = str(j)
+            else:
+                geral[row, 0] = "knn_pthread_euclidiano"
+                geral[row, 1] = get_numero_atributos_pthread(atributos)
+                geral[row, 2] = str(thread)
+                geral[row, 3] = str(j)
+            count += 1
+            row += 1
+            atributos += 1
+        thread += 1
 
-    with open('pthread_manhattan.csv', 'w', encoding='UTF8', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(header_pthread)
-        writer.writerows(pthread_manhattan)
+    thread = 2
+    for i in pthread_manhattan:
+        count = 0
+        atributos = 0
+        for j in i:
+            if count == 0:
+                geral[row, 0] = "knn_pthread_manhattan"
+                geral[row, 1] = get_numero_atributos_pthread(atributos)
+                geral[row, 2] = str(thread)
+                geral[row, 3] = str(j)
+            elif count == 1:
+                geral[row, 0] = "knn_pthread_manhattan"
+                geral[row, 1] = get_numero_atributos_pthread(atributos)
+                geral[row, 2] = str(thread)
+                geral[row, 3] = str(j)
+            else:
+                geral[row, 0] = "knn_pthread_manhattan"
+                geral[row, 1] = get_numero_atributos_pthread(atributos)
+                geral[row, 2] = str(thread)
+                geral[row, 3] = str(j)
+            count += 1
+            row += 1
+            atributos += 1
+        thread += 1
 
-    with open('mpi_euclidiano.csv', 'w', encoding='UTF8', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(header_mpi)
-        writer.writerows(mpi_euclidiano)
+    thread = 2
+    for i in mpi_euclidiano:
+        count = 0
+        atributos = 0
+        for j in i:
+            if count == 0:
+                geral[row, 0] = "knn_mpi_euclidiano"
+                geral[row, 1] = get_numero_atributos_mpi(atributos)
+                geral[row, 2] = str(thread)
+                geral[row, 3] = str(j)
+            elif count == 1:
+                geral[row, 0] = "knn_mpi_euclidiano"
+                geral[row, 1] = get_numero_atributos_mpi(atributos)
+                geral[row, 2] = str(thread)
+                geral[row, 3] = str(j)
+            else:
+                geral[row, 0] = "knn_mpi_euclidiano"
+                geral[row, 1] = get_numero_atributos_mpi(atributos)
+                geral[row, 2] = str(thread)
+                geral[row, 3] = str(j)
+            count += 1
+            row += 1
+            atributos += 1
+        thread += 1
 
-    with open('mpi_manhattan.csv', 'w', encoding='UTF8', newline='') as f:
+    thread = 2
+    for i in mpi_manhattan:
+        count = 0
+        atributos = 0
+        for j in i:
+            if count == 0:
+                geral[row, 0] = "knn_mpi_manhattan"
+                geral[row, 1] = get_numero_atributos_mpi(atributos)
+                geral[row, 2] = str(thread)
+                geral[row, 3] = str(j)
+            elif count == 1:
+                geral[row, 0] = "knn_mpi_manhattan"
+                geral[row, 1] = get_numero_atributos_mpi(atributos)
+                geral[row, 2] = str(thread)
+                geral[row, 3] = str(j)
+            else:
+                geral[row, 0] = "knn_mpi_manhattan"
+                geral[row, 1] = get_numero_atributos_mpi(atributos)
+                geral[row, 2] = str(thread)
+                geral[row, 3] = str(j)
+            count += 1
+            row += 1
+            atributos += 1
+        thread += 1
+
+    with open('geral.csv', 'w', encoding='UTF8', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(header_mpi)
-        writer.writerows(mpi_manhattan)
+        writer.writerow(header)
+        writer.writerows(geral)
